@@ -1,13 +1,17 @@
 pipeline {
-  agent {
+  agent none
+  options { 
+    buildDiscarder(logRotator(numToKeepStr: '2'))
+    skipDefaultCheckout true
+  }
+  stages {
+    stage('Test') {
+      agent {
         kubernetes {
           label 'nodejs-app-pod-2'
           yamlFile 'nodejs-pod.yaml'
         }
       }
-  stages {
-    stage('Test') {
-      agent { label 'nodejs-app' }
       steps {
         checkout scm
         container('nodejs') {
@@ -22,7 +26,7 @@ pipeline {
         branch 'master'
       }
       steps {
-        echo "TODO - build and push image"
+        echo "TODO - build and push image!"
       }
     }
   }
